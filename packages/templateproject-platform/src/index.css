@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a {
+  color: #8b5cf6;
+}
+a:hover {
+  color: #8b5cf6;
+  opacity: 0.8;
+}
