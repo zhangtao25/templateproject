@@ -1,16 +1,14 @@
 import { ConfigProvider } from "antd";
 import { Suspense } from "react";
-
-// import routes from '~react-pages';
-
-import MainBox from "./layouts/MainBox.tsx";
+import {useRoutes} from "react-router-dom";
+import routes from "~react-pages";
 
 const App = () => {
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#8b5cf6",
+          // colorPrimary: "#8b5cf6",
         },
         components: {
           Slider: {
@@ -23,7 +21,7 @@ const App = () => {
       }}
     >
       <Suspense fallback={<p>Loading...</p>}>
-        <MainBox />
+        {useRoutes(routes)}
       </Suspense>
     </ConfigProvider>
   );

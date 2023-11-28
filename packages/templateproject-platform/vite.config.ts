@@ -5,7 +5,9 @@ import { defineConfig } from "vite";
 import Pages from "vite-plugin-pages";
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), Pages(), Icons({ compiler: "jsx", jsx: "react" })],
+  plugins: [react(), Pages({
+    exclude: ['**/components/*.tsx'],
+  }), Icons({ compiler: "jsx", jsx: "react" })],
   resolve: {
     alias: {
       "@/components": path.resolve(__dirname, "./src/components"),

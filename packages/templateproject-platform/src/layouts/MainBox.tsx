@@ -1,4 +1,5 @@
 import Icon, {
+  ApartmentOutlined,
   DashboardOutlined,
   LogoutOutlined,
   QuestionCircleOutlined,
@@ -12,11 +13,10 @@ import { useLocation, useNavigate, useRoutes } from "react-router-dom";
 
 import ClarityTagSolid from "~icons/clarity/tag-solid";
 import IonLanguage from "~icons/ion/language";
-import routes from "~react-pages";
+
 
 // import { MeDocument } from '../helpers/backend/gen/graphql.ts';
 import { genBreadcrumbItems } from "./gen.tsx";
-import Sv from "./Sv";
 const { Content, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -37,10 +37,11 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Dashboard", "dashboard", <DashboardOutlined />),
-  getItem("Members", "members", <Icon component={Sv} />),
+  getItem("Members", "members", <ApartmentOutlined/>),
 ];
 
-const App: React.FC = () => {
+const App: React.FC<{children:any}> = ({children}) => {
+  console.log(children,'children')
   const nav = useNavigate();
   // const { data: meData } = useQuery(MeDocument);
 
@@ -58,7 +59,7 @@ const App: React.FC = () => {
   }, [collapsed]);
   const loc = useLocation();
   const mode = ["/register", "/login"].includes(loc.pathname);
-  const r = useRoutes(routes);
+
 
   const selectedKey = useMemo(() => {
     if (loc.pathname === "/") {
@@ -115,110 +116,106 @@ const App: React.FC = () => {
   };
   return (
     <div>
-      {!mode ? (
-        <Layout style={{ minHeight: "100vh" }}>
-          <Sider
-            collapsible
-            collapsed={collapsed}
-            onCollapse={(value) => setCollapsed(value)}
+      <Layout style={{ minHeight: "100vh" }}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+        >
+          <div
+            className={`flex items-center px-[16px] py-[10px] ${
+              collapsed ? "justify-center" : ""
+            } cursor-pointer`}
+            onClick={() => {
+              nav("/");
+            }}
           >
-            <div
-              className={`flex items-center px-[16px] py-[10px] ${
-                collapsed ? "justify-center" : ""
-              } cursor-pointer`}
-              onClick={() => {
-                nav("/");
-              }}
-            >
-              <div>
-                <img className={"w-[28px]"} src="/light-logo.svg" alt="" />
-              </div>
-              {!collapsed && (
-                <span className={"text-xl text-white ml-3"}>AREXTEST</span>
-              )}
+            <div>
+              <img className={"w-[28px]"} src="/light-logo.svg" alt="" />
             </div>
-            <Menu
-              onSelect={(selectInfo) => {
-                if (selectInfo.key === "dashboard") {
-                  nav("/");
-                } else {
-                  nav(selectInfo.key);
+            {!collapsed && (
+              <span className={"text-xl text-white ml-3"}>AREXTEST</span>
+            )}
+          </div>
+          <Menu
+            onSelect={(selectInfo) => {
+              if (selectInfo.key === "dashboard") {
+                nav("/");
+              } else {
+                nav(selectInfo.key);
+              }
+            }}
+            theme="dark"
+            selectedKeys={[selectedKey]}
+            mode="inline"
+            items={items}
+          />
+        </Sider>
+        <Layout>
+          <header className={"h-[48px] bg-white flex justify-between px-5"}>
+            <div>
+              {/*<div>{JSON.stringify(loc)}</div>*/}
+              <Breadcrumb
+                className={"ml-3 mt-3"}
+                items={genBreadcrumbItems(loc.pathname)}
+              />
+            </div>
+
+            <div className={"right flex gap-2"}>
+              <div
+                className={
+                  "flex items-center cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"
                 }
-              }}
-              theme="dark"
-              selectedKeys={[selectedKey]}
-              mode="inline"
-              items={items}
-            />
-          </Sider>
-          <Layout>
-            <header className={"h-[48px] bg-white flex justify-between px-5"}>
-              <div>
-                {/*<div>{JSON.stringify(loc)}</div>*/}
-                <Breadcrumb
-                  className={"ml-3 mt-3"}
-                  items={genBreadcrumbItems(loc.pathname)}
-                />
+              >
+                <QuestionCircleOutlined />
               </div>
 
-              <div className={"right flex gap-2"}>
-                <div
+              <div
+                className={
+                  "flex items-center cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"
+                }
+                onClick={() => {
+                  window.open(`https://github.com/canyon-project/canyon`);
+                }}
+              >
+                <Icon component={ClarityTagSolid} />
+              </div>
+
+              <Dropdown
+                menu={{ items: dropdownItems, onClick: dropdownClick }}
+              >
+                <Space
                   className={
                     "flex items-center cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"
                   }
+                  onClick={(e) => e.preventDefault()}
                 >
-                  <QuestionCircleOutlined />
-                </div>
+                  {/*<Avatar src={meData?.me.avatar} />*/}
+                  {/*<span>{meData?.me.nickname}</span>*/}
+                </Space>
+              </Dropdown>
 
-                <div
-                  className={
-                    "flex items-center cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"
-                  }
-                  onClick={() => {
-                    window.open(`https://github.com/canyon-project/canyon`);
-                  }}
+              <Dropdown
+                menu={{
+                  items: dropdownItems2,
+                  onClick: dropdownClick,
+                  activeKey: "en",
+                }}
+              >
+                <Space
+                  className={"cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"}
+                  onClick={(e) => e.preventDefault()}
                 >
-                  <Icon component={ClarityTagSolid} />
-                </div>
-
-                <Dropdown
-                  menu={{ items: dropdownItems, onClick: dropdownClick }}
-                >
-                  <Space
-                    className={
-                      "flex items-center cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"
-                    }
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    {/*<Avatar src={meData?.me.avatar} />*/}
-                    {/*<span>{meData?.me.nickname}</span>*/}
-                  </Space>
-                </Dropdown>
-
-                <Dropdown
-                  menu={{
-                    items: dropdownItems2,
-                    onClick: dropdownClick,
-                    activeKey: "en",
-                  }}
-                >
-                  <Space
-                    className={"cursor-pointer hover:bg-[rgb(0,0,0,.025)] px-2"}
-                    onClick={(e) => e.preventDefault()}
-                  >
-                    <Icon component={IonLanguage} style={{ fontSize: 18 }} />
-                  </Space>
-                </Dropdown>
-              </div>
-            </header>
-            <Content style={{ margin: "0 0" }}>
-              <div style={{ padding: 24, minHeight: 360 }}>{r}</div>
-            </Content>
-          </Layout>
+                  <Icon component={IonLanguage} style={{ fontSize: 18 }} />
+                </Space>
+              </Dropdown>
+            </div>
+          </header>
+          <Content style={{ margin: "0 0" }}>
+            <div style={{ padding: 24, minHeight: 360 }}>{children}</div>
+          </Content>
         </Layout>
-      ) : (
-        r
-      )}
+      </Layout>
     </div>
   );
 };
